@@ -1,6 +1,7 @@
 #include<iostream>
 #include<vector>
-#include"heap.h"
+#include"max_heap.h"
+// #include"heap.h"
 
 using namespace std;
 
@@ -106,6 +107,14 @@ void insertionSort(vector<int>& vec) {
     }
 }
 
+void heapSort(vector<int>& vec) {
+    MaxHeap heap{vec};
+    for (int i = 0; i < heap.size(); i++) {
+        heap.heapify();
+    }
+    vec = heap.getVector();
+}
+
 void radixSort(vector<int>& vec, int digits) {
     for (int round = 1; round <= digits; round++) {
         vector<int> tmp;
@@ -181,7 +190,7 @@ int normalFind(const vector<int>& vec, int num) {
 }
 
 
-int betterFind(const vector<int>& vec, int num, int startIndex, int endIndex) {
+int binarySearch(const vector<int>& vec, int num, int startIndex, int endIndex) {
     int middleIndex = startIndex + int((endIndex - startIndex) / 2);
     // cout << startIndex << "-" << endIndex << " | " << middleIndex << "\t";
     // cin.ignore();
@@ -192,9 +201,9 @@ int betterFind(const vector<int>& vec, int num, int startIndex, int endIndex) {
     }
 
     if (num < vec[middleIndex]) {
-        return betterFind(vec, num, startIndex, middleIndex-1);
+        return binarySearch(vec, num, startIndex, middleIndex-1);
     } else {
-        return betterFind(vec, num, middleIndex+1, endIndex);
+        return binarySearch(vec, num, middleIndex+1, endIndex);
     }
 }
 
@@ -217,48 +226,58 @@ class Timer {
 };
 
 void trackPerformance() {
-
-    int numberOfValues = 10'000;
+    int numberOfValues = 50'000'000;
+    cout << "Generating Vector with " << numberOfValues << " values ..." << endl;
     vector<int> numbers;
     for (int i = 0; i < numberOfValues; i++) {
-        // numbers.push_back(arc4random() % (numberOfValues * 7));
-        numbers.push_back(i);
+        numbers.push_back(arc4random() % (numberOfValues * 7));
     }
-    vector<int> numbers2 = numbers;
-    vector<int> numbers3 = numbers;
     cout << "Start" << endl;
 
-    // {
-    //     Timer t {"BubbleSort"};
-    //     bubbleSort(numbers);
-    // }
-
-    // {
-    //     Timer t {"InsertionSort"};
-    //     insertionSort(numbers2);
-    // }
-
     {
+        vector<int> vecToSort = numbers;
         Timer t {"QuickSort"};
-        quickSort(numbers3, 0, numbers3.size()-1);
+        quickSort(vecToSort, 0, vecToSort.size()-1);
     }
+
     {
+        vector<int> vecToSort = numbers;
         Timer t {"RadixSort"};
-        radixSort(numbers2, 5);
+        radixSort(vecToSort, 5);
     }
 
     {
-        Timer t {"NormalFind"};
-        int index = normalFind(numbers, int(numberOfValues/3*2));
-        cout << numbers[index] << endl;
-        // normalFind(numbers, 500'000);
+        vector<int> vecToSort = numbers;
+        Timer t {"HeapSort"};
+        heapSort(vecToSort);
     }
 
-    {
-        Timer t {"BetterFind"};
-        int index = betterFind(numbers, int(numberOfValues/3*2), 0, numbers.size()-1);
-        cout << numbers[index] << endl;
-    }
+    // {
+    //     vector<int> vecToSort = numbers;
+    //     Timer t {"BubbleSort"};
+    //     bubbleSort(vecToSort);
+    // }
+
+    // {
+    //     vector<int> vecToSort = numbers;
+    //     Timer t {"InsertionSort"};
+    //     insertionSort(vecToSort);
+    // }
+
+    // Find Value =================
+    // quickSort(numbers, 0, numbers.size()-1);
+    // cout << "----Find----" << endl;
+    // {
+    //     Timer t {"NormalFind"};
+    //     int index = normalFind(numbers, int(numberOfValues/3*2));
+    //     cout << numbers[index] << endl;
+    // }
+
+    // {
+    //     Timer t {"binarySearch"};
+    //     int index = binarySearch(numbers, int(numberOfValues/3*2), 0, numbers.size()-1);
+    //     cout << numbers[index] << endl;
+    // }
 }
 
 void insertAt(vector<int>& vec, int value) {
@@ -271,10 +290,16 @@ void insertAt(vector<int>& vec, int value) {
 }
 
 int main() {
-    vector<int> vec{1,2,3,4,5,6,7,8,9,11,12,13,14,15};
-    insertAt(vec, 10);
+    trackPerformance();
+    // vector<int> vec;
+    // int numOfValues = 1'000;
+    // // int numOfValues = 1'000'000;
+    // for (int i = 0; i < numOfValues; i++) {
+    //     vec.push_back(arc4random() % (numOfValues * 3));
+    // }
 
-    print(vec);
+    // heapSort(vec);
+    // print(vec);
 
 
     // trackPerformance();
