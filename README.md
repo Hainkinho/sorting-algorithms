@@ -5,5 +5,6 @@ Comparison of different sorting algorithms
 - Selection Sort
 - Insertion Sort
 - Quick Sort
+- Heap Sort
 - Counting Sort
 - Radix Sort
